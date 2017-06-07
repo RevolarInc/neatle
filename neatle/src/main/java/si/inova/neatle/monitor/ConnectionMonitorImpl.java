@@ -42,7 +42,7 @@ import si.inova.neatle.util.NeatleLogger;
 @RestrictTo(RestrictTo.Scope.LIBRARY)
 public class ConnectionMonitorImpl implements ConnectionMonitor {
 
-    private static final long DEFAULT_RECONNECT_TIMEOUT = 2500L;
+    private static final long DEFAULT_RECONNECT_TIMEOUT = 50 * 1000L;
     private static final long MAX_RECONNECT_TIMEOUT = 60 * 1000L;
 
     private final Context context;
@@ -130,8 +130,6 @@ public class ConnectionMonitorImpl implements ConnectionMonitor {
 
     private class ConnHandler implements ConnectionHandler, ConnectionStateListener {
 
-        private long reconnectTimeout = DEFAULT_RECONNECT_TIMEOUT;
-
         @Override
         public int onConnectionIdle(Connection connection) {
             return keepAlive ? ON_IDLE_KEEP_ALIVE : ON_IDLE_DISCONNECT;
@@ -144,13 +142,10 @@ public class ConnectionMonitorImpl implements ConnectionMonitor {
             }
 
             if (newState == BluetoothAdapter.STATE_DISCONNECTED) {
-                NeatleLogger.d("Will try to reconnect to " + connection.getDevice().getAddress() + " after " + (reconnectTimeout / 1000) + " seconds");
+                NeatleLogger.d("Will try to reconnect to " + connection.getDevice().getAddress() + " after " + (DEFAULT_RECONNECT_TIMEOUT / 1000) + " seconds");
 
                 handler.removeCallbacks(reconnectRunnable);
-                handler.postDelayed(reconnectRunnable, reconnectTimeout);
-                reconnectTimeout = Math.min(reconnectTimeout * 2, MAX_RECONNECT_TIMEOUT);
-            } else if (newState == BluetoothAdapter.STATE_CONNECTED) {
-                reconnectTimeout = DEFAULT_RECONNECT_TIMEOUT;
+                handler.postDelayed(reconnectRunnable, DEFAULT_RECONNECT_TIMEOUT);
             }
         }
     }
