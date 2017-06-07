@@ -23,8 +23,6 @@
  */
 
 apply plugin: 'com.android.library'
-apply plugin: 'io.github.ddimtirov.codacy'
-apply from: '../jacoco.gradle'
 
 ext {
     artifactId = 'neatle'
@@ -55,14 +53,6 @@ android {
         ignoreWarnings true
     }
 
-    testOptions {
-        unitTests.all {
-            jacoco {
-                includeNoLocationClasses = true
-            }
-        }
-    }
-
     libraryVariants.all { variant ->
         variant.outputs.each { output ->
             output.outputFile = new File(output.outputFile.parent, output.outputFile.name.replace("${artifactId}", "${artifactId}-${getVersionName()}"))
@@ -82,5 +72,3 @@ dependencies {
     testCompile 'org.robolectric:robolectric:3.3.2'
     testCompile "org.mockito:mockito-core:2.7.22"
 }
-
-apply from: '../deploy.gradle'
