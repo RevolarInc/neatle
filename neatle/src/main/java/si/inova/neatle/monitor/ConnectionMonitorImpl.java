@@ -42,8 +42,7 @@ import si.inova.neatle.util.NeatleLogger;
 @RestrictTo(RestrictTo.Scope.LIBRARY)
 public class ConnectionMonitorImpl implements ConnectionMonitor {
 
-    private static final long DEFAULT_RECONNECT_TIMEOUT = 50 * 1000L;
-    private static final long MAX_RECONNECT_TIMEOUT = 60 * 1000L;
+    private static final long DEFAULT_RECONNECT_TIMEOUT = 2 * 1000L;
 
     private final Context context;
     private final BluetoothDevice device;
